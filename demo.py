@@ -53,6 +53,13 @@ class pig(object):
 					ar_ns = dnsrr.rrname
 					ar_nsip = dnsrr.rdata
 					print "%s\t%s" % (ar_ns, ar_nsip)
+	def qtype_CNAME(self, your_qname, your_dnsip='8.8.8.8'):
+		self.your_qname = your_qname
+		self.your_dnsip = your_dnsip
+		pkt = sr1(IP(dst=your_dnsip)/UDP()/DNS(id=1,qd=DNSQR(qtype=5,qname=your_qname)), verbose=0)
+		if pkt and pkt.haslayer('UDP') and pkt.haslayer('DNS'):
+			dns = pkt[DNS]
+			print dns.an.rdata
 
 
 
@@ -71,7 +78,10 @@ elif num_of_argv == 2:
 elif num_of_argv == 3:
 	if sys.argv[-1] == 'ns':
 		domain = sys.argv[1]
-		mypig.qtype_NS(domain)
+		mypig.qtype_NS(domain)	
+	elif sys.argv[-1] == 'cname':
+		domain = sys.argv[1]
+		mypig.qtype_CNAME(domain)
 	else:
 		domain = sys.argv[1]
 		dnsip = sys.argv[2].split('@')[1]
@@ -81,9 +91,14 @@ elif num_of_argv == 4:
 		domain = sys.argv[1]
 		dnsip = sys.argv[2].split('@')[1]
 		mypig.qtype_NS(domain, dnsip)
+	if sys.argv[-1] == 'cname':
+		domain = sys.argv[1]
+		dnsip = sys.argv[2].split('@')[1]
+		mypig.qtype_CNAME(domain, dnsip)
 else:
 	usage()
 	exit(255)
+
 
 
 
