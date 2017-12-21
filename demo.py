@@ -2,8 +2,9 @@
 #author : lizb
 #date : 2017/10/30
 
-
+import ipip
 import sys
+import time
 sys.path.append('/Users/apple/lzbworkspace/mylib')
 reload(sys)
 from scapy.all import *
@@ -31,7 +32,8 @@ class pig(object):
 			ancount = dns.ancount
 			for i in range(ancount):
 				dnsrr = dns.an[i]
-				print dnsrr.rdata
+				print ipip.get_ip(str(dnsrr.rdata))
+				time.sleep(1)		
 	def qtype_NS(self, your_qname,your_dnsip='8.8.8.8'):
 		self.your_qname = your_qname
 		self.your_dnsip = your_dnsip
